@@ -9,18 +9,18 @@ import static java.util.stream.Collectors.joining;
 public class MaximumElement {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\Gercike\\IdeaProjects\\HackerRank\\files\\MaximumElementCase\\testcase#5.txt");
+        File file = new File("C:\\Users\\Gercike\\IdeaProjects\\HackerRank\\files\\MaximumElementCase\\testcase#0.txt");
         Scanner scanner = new Scanner(file);
         List<String> ops = new ArrayList<>();
         scanner.nextLine();
         while (scanner.hasNextLine()) {
             ops.add(scanner.nextLine());
         }
-        List<Integer> res = MaximumElement.getMax(ops);
+        List<Integer> res = MaximumElement.getMax2(ops);
         System.out.println(
                 res.stream()
                         .map(Object::toString)
-                        .collect(joining("\n"))
+                        .collect(joining(" "))
                         + "\n"
         );
     }
@@ -52,4 +52,42 @@ public class MaximumElement {
         return result;
     }
 
+    public static List<Integer> getMax2(List<String> operations) {
+        class StackElement {
+            int value;
+            int maxInStack;
+
+            public StackElement(int value, int maxInStack) {
+                this.value = value;
+                this.maxInStack = maxInStack;
+            }
+        }
+        List<Integer> result = new ArrayList<>();
+        Stack<StackElement> stack = new Stack<>();
+        int max = Integer.MIN_VALUE;
+        for (String operation : operations) {
+            String[] array = operation.split(" ");
+            int op = Integer.parseInt(array[0]);
+            if (op == 1) {
+                int number = Integer.parseInt(array[1]);
+                if (number > max) {
+                    max = number;
+                }
+                StackElement stackElement = new StackElement(number, max);
+                stack.push(stackElement);
+            }
+            if (op == 2) {
+                stack.pop();
+                if (!stack.empty()) {
+                    max = stack.peek().maxInStack;
+                } else {
+                    max = Integer.MIN_VALUE;
+                }
+            }
+            if (op == 3) {
+                result.add((stack.peek().maxInStack));
+            }
+        }
+        return result;
+    }
 }
